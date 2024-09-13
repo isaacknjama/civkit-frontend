@@ -74,6 +74,18 @@ const TakeOrder = () => {
       if (invoiceState === 'ACCEPTED') {
         console.log('Taker hold invoice has been paid!');
         // Handle paid state (e.g., show success message, update UI)
+        const nostrEventData = {
+          order_id: orderId,
+          amount_msat: order?.amount_msat,
+          type: order?.type,
+          status: 'taker_hold_invoice_paid',
+          currency: order?.currency,
+          payment_method: order?.payment_method
+        };
+        await signAndSendEvent(nostrEventData, 1507);
+        
+        // Proceed with order flow
+        handleRedirect();
       }
     } catch (error) {
       console.error('Error checking taker hold invoice status:', error);
